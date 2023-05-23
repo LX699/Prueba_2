@@ -145,9 +145,6 @@ public class UsuarioService {
 
     }
 
-
-
-
     public List<Usuario> getUsuariosPopulares() {
         List<Usuario> usuariosPopulares = new ArrayList<>();
         int maxSeguidores = 0;
