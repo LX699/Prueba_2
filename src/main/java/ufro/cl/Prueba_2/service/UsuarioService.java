@@ -163,6 +163,7 @@ public class UsuarioService {
         return usuariosPopulares;
     }
 
+
     public List<Usuario> obtenerUsuarioInactivoMayorSeguidores() throws IOException {
         List<Usuario> usuarios = leerUsuarios(); // Llamada al método leerUsuarios() para obtener la lista de usuarios
         List<Usuario> usuariosInactivos = getUsuariosInactivos(); // Llamada al método getUsuariosInactivos() para obtener la lista de usuarios inactivos
