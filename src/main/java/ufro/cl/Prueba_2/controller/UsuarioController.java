@@ -44,4 +44,6 @@ public class UsuarioController {
         List<Usuario> usuariosConMitadSeguidoresInactivos = usuarioService.obtenerUsuariosConMitadSeguidoresInactivos();
         return ResponseEntity.ok(usuariosConMitadSeguidoresInactivos);
     }
+
+
 }
