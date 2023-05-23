@@ -53,6 +53,7 @@ public class UsuarioController {
     public List<Usuario> getUsuariosPopulares() {
         return usuarioService.getUsuariosPopulares();
     }
+
     @GetMapping("/inactivosMayoresSeguidores")
     public ResponseEntity<List<Usuario>> obtenerUsuarioInactivoMayorSeguidores() throws IOException {
         List<Usuario> usuarios = usuarioService.obtenerUsuarioInactivoMayorSeguidores();
