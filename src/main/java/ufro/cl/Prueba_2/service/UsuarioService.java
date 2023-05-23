@@ -142,7 +142,11 @@ public class UsuarioService {
         List<Usuario> ultimosUsuariosConectados = new ArrayList<>(usuarios);
         ultimosUsuariosConectados.sort(Comparator.comparing(Usuario::getUltimaConexion).reversed());
         return ultimosUsuariosConectados.subList(0, Math.min(cantidad, ultimosUsuariosConectados.size()));
+
     }
+
+
+
 
     public List<Usuario> getUsuariosPopulares() {
         List<Usuario> usuariosPopulares = new ArrayList<>();
