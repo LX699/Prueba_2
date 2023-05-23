@@ -15,9 +15,9 @@ import java.io.IOException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.Comparator;
 
 
 @Service
@@ -116,8 +116,50 @@ public class UsuarioService {
                 .collect(Collectors.toList());
     }
 
+    public List<Usuario> getUltimosUsuariosConectados(int cantidad) {
+        List<Usuario> ultimosUsuariosConectados = new ArrayList<>(usuarios);
+        ultimosUsuariosConectados.sort(Comparator.comparing(Usuario::getUltimaConexion).reversed());
+        return ultimosUsuariosConectados.subList(0, Math.min(cantidad, ultimosUsuariosConectados.size()));
+    }
 
+    public List<Usuario> getUsuariosPopulares() {
+        List<Usuario> usuariosPopulares = new ArrayList<>();
+        int maxSeguidores = 0;
+    
+        for (Usuario usuario : usuarios) {
+            int cuentaSeguidores = usuario.getSiguiendo().size();
+    
+            if (cuentaSeguidores > maxSeguidores) {
+                usuariosPopulares.clear();
+                usuariosPopulares.add(usuario);
+                maxSeguidores = cuentaSeguidores;
+            } else if (cuentaSeguidores == maxSeguidores) {
+                usuariosPopulares.add(usuario);
+            }
+        }
+    
+        return usuariosPopulares;
+    }
 
-
-
+    public List<Usuario> obtenerUsuarioInactivoMayorSeguidores() throws IOException {
+        List<Usuario> usuarios = leerUsuarios(); // Llamada al método leerUsuarios() para obtener la lista de usuarios
+        List<Usuario> usuariosInactivos = getUsuariosInactivos(); // Llamada al método getUsuariosInactivos() para obtener la lista de usuarios inactivos
+    
+        // Variables para almacenar el máximo número de seguidores y los usuarios inactivos correspondientes
+        int maxSeguidores = 0;
+        List<Usuario> usuariosConMaxSeguidores = new ArrayList<>();
+    
+        for (Usuario usuario : usuariosInactivos) {
+            int numSeguidores = usuario.getSiguiendo().size();
+            if (numSeguidores > maxSeguidores) {
+                maxSeguidores = numSeguidores;
+                usuariosConMaxSeguidores.clear();
+                usuariosConMaxSeguidores.add(usuario);
+            } else if (numSeguidores == maxSeguidores) {
+                usuariosConMaxSeguidores.add(usuario);
+            }
+        }
+    
+        return usuariosConMaxSeguidores;
+    }
 }

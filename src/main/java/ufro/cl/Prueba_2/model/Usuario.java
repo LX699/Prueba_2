@@ -1,5 +1,7 @@
 package ufro.cl.Prueba_2.model;
 
+import lombok.Data;
+
 import java.time.LocalDate;
 import java.util.List;
 
