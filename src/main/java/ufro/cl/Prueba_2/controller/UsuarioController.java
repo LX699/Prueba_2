@@ -40,7 +40,7 @@ public class UsuarioController {
 
     @GetMapping("/mitad-seguidores-inactivos")
     public ResponseEntity<List<Usuario>> obtenerUsuariosConMitadSeguidoresInactivos() {
-        List<Usuario> usuariosConMitadSeguidoresInactivos = usuarioService.obtenerUsuariosConMitadSeguidoresInactivos();
+        List<Usuario> usuariosConMitadSeguidoresInactivos = usuarioService.getUsuariosConSeguidoresInactivos();
         return ResponseEntity.ok(usuariosConMitadSeguidoresInactivos);
     }
 

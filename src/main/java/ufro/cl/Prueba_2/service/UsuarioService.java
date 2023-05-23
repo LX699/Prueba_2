@@ -71,18 +71,17 @@ public class UsuarioService {
 
     public List<Usuario> getUsuariosInactivos() {
         List<Usuario> usuariosInactivos = new ArrayList<>();
-        LocalDate currentDate = LocalDate.now();
+        LocalDate currentDate = LocalDate.of(2023, 5, 22); // Establecer la fecha actual
 
         for (Usuario usuario : usuarios) {
             LocalDate ultimaConexion = usuario.getUltimaConexion();
-            if (ultimaConexion.isBefore(currentDate.minusMonths(6))) {
+            if (ultimaConexion.isBefore(currentDate.minusYears(4))) { // Cambiar de meses a años
                 usuariosInactivos.add(usuario);
             }
         }
 
         return usuariosInactivos;
     }
-
     public List<Usuario> getUsuariosConMasSeguidores() {
         List<Usuario> usuariosConMasSeguidores = new ArrayList<>();
         int maxSeguidores = 0;
@@ -103,17 +102,40 @@ public class UsuarioService {
         return usuariosConMasSeguidores;
     }
 
-    public List<Usuario> obtenerUsuariosConMitadSeguidoresInactivos() {
-        return usuarios.stream()
-                .filter(usuario -> {
-                    int numSeguidores = usuario.getSiguiendo().size();
-                    long numSeguidoresInactivos = usuario.getSiguiendo().stream()
-                            .filter(seguido -> usuarios.stream()
-                                    .anyMatch(u -> u.getId() == seguido && u.getUltimaConexion().isBefore(LocalDate.now().minusMonths(6)))) // Cambiar 6 por el número de meses considerado como inactivo
-                            .count();
-                    return numSeguidoresInactivos >= numSeguidores / 2.0;
-                })
-                .collect(Collectors.toList());
+    public List<Usuario> getUsuariosConSeguidoresInactivos() {
+        List<Usuario> usuariosConSeguidoresInactivos = new ArrayList<>();
+        LocalDate currentDate = LocalDate.of(2023, 5, 22); // Establecer la fecha actual
+
+        for (Usuario usuario : usuarios) {
+            List<Integer> siguiendo = usuario.getSiguiendo();
+            int totalCuentas = siguiendo.size();
+            int inactivas = 0;
+
+            for (Integer cuentaId : siguiendo) {
+                Usuario cuenta = buscarUsuarioPorId(cuentaId);
+                if (cuenta != null) {
+                    LocalDate ultimaConexion = cuenta.getUltimaConexion();
+                    if (ultimaConexion.isBefore(currentDate.minusYears(4))) {
+                        inactivas++;
+                    }
+                }
+            }
+
+            if (inactivas >= totalCuentas / 2) {
+                usuariosConSeguidoresInactivos.add(usuario);
+            }
+        }
+
+        return usuariosConSeguidoresInactivos;
+    }
+
+    private Usuario buscarUsuarioPorId(int id) {
+        for (Usuario usuario : usuarios) {
+            if (usuario.getId() == id) {
+                return usuario;
+            }
+        }
+        return null;
     }
 
     public List<Usuario> getUltimosUsuariosConectados(int cantidad) {
