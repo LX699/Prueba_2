@@ -1,0 +1,47 @@
+package ufro.cl.Prueba_2.controller;
+
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+import ufro.cl.Prueba_2.model.Usuario;
+import ufro.cl.Prueba_2.service.UsuarioService;
+
+import java.io.IOException;
+import java.util.List;
+
+@RestController
+@CrossOrigin("*")
+@RequestMapping(value = "usuarios")
+public class UsuarioController {
+    @Autowired
+    private UsuarioService usuarioService;
+
+
+    @GetMapping("/lista")
+    public List<Usuario> obtenerUsuarios() throws IOException {
+        return usuarioService.leerUsuarios();
+    }
+
+    @GetMapping("/inactivos")
+    public ResponseEntity<List<Usuario>> obtenerUsuariosInactivos() {
+        List<Usuario> usuariosInactivos = usuarioService.getUsuariosInactivos();
+        return ResponseEntity.ok(usuariosInactivos);
+    }
+
+    @GetMapping("/mayor-cantidad-seguidores")
+    public ResponseEntity<List<Usuario>> obtenerUsuariosConMayorCantidadSeguidores() {
+        List<Usuario> usuariosConMayorCantidadSeguidores = usuarioService.getUsuariosConMasSeguidores();
+        return ResponseEntity.ok(usuariosConMayorCantidadSeguidores);
+    }
+
+    @GetMapping("/mitad-seguidores-inactivos")
+    public ResponseEntity<List<Usuario>> obtenerUsuariosConMitadSeguidoresInactivos() {
+        List<Usuario> usuariosConMitadSeguidoresInactivos = usuarioService.obtenerUsuariosConMitadSeguidoresInactivos();
+        return ResponseEntity.ok(usuariosConMitadSeguidoresInactivos);
+    }
+}
