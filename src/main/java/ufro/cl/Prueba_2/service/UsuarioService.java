@@ -69,18 +69,17 @@ public class UsuarioService {
 
     public List<Usuario> getUsuariosInactivos() {
         List<Usuario> usuariosInactivos = new ArrayList<>();
-        LocalDate currentDate = LocalDate.now();
+        LocalDate currentDate = LocalDate.of(2023, 5, 22); // Establecer la fecha actual
 
         for (Usuario usuario : usuarios) {
             LocalDate ultimaConexion = usuario.getUltimaConexion();
-            if (ultimaConexion.isBefore(currentDate.minusMonths(6))) {
+            if (ultimaConexion.isBefore(currentDate.minusYears(4))) { // Cambiar de meses a años
                 usuariosInactivos.add(usuario);
             }
         }
 
         return usuariosInactivos;
     }
-
     public List<Usuario> getUsuariosConMasSeguidores() {
         List<Usuario> usuariosConMasSeguidores = new ArrayList<>();
         int maxSeguidores = 0;
@@ -121,12 +120,47 @@ public class UsuarioService {
                     return numSeguidoresInactivos >= numSeguidores / 2.0;
                 })
                 .collect(Collectors.toList());
+    public List<Usuario> getUsuariosConSeguidoresInactivos() {
+        List<Usuario> usuariosConSeguidoresInactivos = new ArrayList<>();
+        LocalDate currentDate = LocalDate.of(2023, 5, 22); // Establecer la fecha actual
+
+        for (Usuario usuario : usuarios) {
+            List<Integer> siguiendo = usuario.getSiguiendo();
+            int totalCuentas = siguiendo.size();
+            int inactivas = 0;
+
+            for (Integer cuentaId : siguiendo) {
+                Usuario cuenta = buscarUsuarioPorId(cuentaId);
+                if (cuenta != null) {
+                    LocalDate ultimaConexion = cuenta.getUltimaConexion();
+                    if (ultimaConexion.isBefore(currentDate.minusYears(4))) {
+                        inactivas++;
+                    }
+                }
+            }
+
+            if (inactivas >= totalCuentas / 2) {
+                usuariosConSeguidoresInactivos.add(usuario);
+            }
+        }
+
+        return usuariosConSeguidoresInactivos;
+    }
+
+    private Usuario buscarUsuarioPorId(int id) {
+        for (Usuario usuario : usuarios) {
+            if (usuario.getId() == id) {
+                return usuario;
+            }
+        }
+        return null;
     }
 
     public List<Usuario> getUltimosUsuariosConectados(int cantidad) {
         List<Usuario> ultimosUsuariosConectados = new ArrayList<>(usuarios);
         ultimosUsuariosConectados.sort(Comparator.comparing(Usuario::getUltimaConexion).reversed());
         return ultimosUsuariosConectados.subList(0, Math.min(cantidad, ultimosUsuariosConectados.size()));
+
     }
 
     public List<Usuario> getUsuariosPopulares() {
@@ -147,6 +181,7 @@ public class UsuarioService {
 
         return usuariosPopulares;
     }
+
 
     public List<Usuario> obtenerUsuarioInactivoMayorSeguidores() throws IOException {
         List<Usuario> usuarios = leerUsuarios(); // Llamada al método leerUsuarios() para obtener la lista de usuarios

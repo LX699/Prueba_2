@@ -40,7 +40,7 @@ public class UsuarioController {
 
     @GetMapping("/mitad-seguidores-inactivos")
     public ResponseEntity<List<Usuario>> obtenerUsuariosConMitadSeguidoresInactivos() {
-        List<Usuario> usuariosConMitadSeguidoresInactivos = usuarioService.obtenerUsuariosConMitadSeguidoresInactivos();
+        List<Usuario> usuariosConMitadSeguidoresInactivos = usuarioService.getUsuariosConSeguidoresInactivos();
         return ResponseEntity.ok(usuariosConMitadSeguidoresInactivos);
     }
 
@@ -53,6 +53,7 @@ public class UsuarioController {
     public List<Usuario> getUsuariosPopulares() {
         return usuarioService.getUsuariosPopulares();
     }
+
     @GetMapping("/inactivosMayoresSeguidores")
     public ResponseEntity<List<Usuario>> obtenerUsuarioInactivoMayorSeguidores() throws IOException {
         List<Usuario> usuarios = usuarioService.obtenerUsuarioInactivoMayorSeguidores();
