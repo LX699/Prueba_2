@@ -1,6 +1,5 @@
 package ufro.cl.Prueba_2.service;
 
-
 import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
@@ -19,7 +18,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.Comparator;
 
-
 @Service
 public class UsuarioService {
     private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("dd/MM/yyyy");
@@ -37,8 +35,8 @@ public class UsuarioService {
     public List<Usuario> leerUsuarios() throws IOException {
         List<Usuario> usuarios = new ArrayList<>();
 
-        Resource resource = resourceLoader.getResource("classpath:Dataset/dataset2.csv");
-        File file = resource.getFile();
+        String filePath = "src/main/resources/Dataset/dataset2.csv";
+        File file = new File(filePath);
 
         try (BufferedReader br = new BufferedReader(new FileReader(file))) {
             String line;
@@ -109,7 +107,16 @@ public class UsuarioService {
                     int numSeguidores = usuario.getSiguiendo().size();
                     long numSeguidoresInactivos = usuario.getSiguiendo().stream()
                             .filter(seguido -> usuarios.stream()
-                                    .anyMatch(u -> u.getId() == seguido && u.getUltimaConexion().isBefore(LocalDate.now().minusMonths(6)))) // Cambiar 6 por el número de meses considerado como inactivo
+                                    .anyMatch(u -> u.getId() == seguido
+                                            && u.getUltimaConexion().isBefore(LocalDate.now().minusMonths(6)))) // Cambiar
+                                                                                                                // 6 por
+                                                                                                                // el
+                                                                                                                // número
+                                                                                                                // de
+                                                                                                                // meses
+                                                                                                                // considerado
+                                                                                                                // como
+                                                                                                                // inactivo
                             .count();
                     return numSeguidoresInactivos >= numSeguidores / 2.0;
                 })
@@ -125,10 +132,10 @@ public class UsuarioService {
     public List<Usuario> getUsuariosPopulares() {
         List<Usuario> usuariosPopulares = new ArrayList<>();
         int maxSeguidores = 0;
-    
+
         for (Usuario usuario : usuarios) {
             int cuentaSeguidores = usuario.getSiguiendo().size();
-    
+
             if (cuentaSeguidores > maxSeguidores) {
                 usuariosPopulares.clear();
                 usuariosPopulares.add(usuario);
@@ -137,18 +144,20 @@ public class UsuarioService {
                 usuariosPopulares.add(usuario);
             }
         }
-    
+
         return usuariosPopulares;
     }
 
     public List<Usuario> obtenerUsuarioInactivoMayorSeguidores() throws IOException {
         List<Usuario> usuarios = leerUsuarios(); // Llamada al método leerUsuarios() para obtener la lista de usuarios
-        List<Usuario> usuariosInactivos = getUsuariosInactivos(); // Llamada al método getUsuariosInactivos() para obtener la lista de usuarios inactivos
-    
-        // Variables para almacenar el máximo número de seguidores y los usuarios inactivos correspondientes
+        List<Usuario> usuariosInactivos = getUsuariosInactivos(); // Llamada al método getUsuariosInactivos() para
+                                                                  // obtener la lista de usuarios inactivos
+
+        // Variables para almacenar el máximo número de seguidores y los usuarios
+        // inactivos correspondientes
         int maxSeguidores = 0;
         List<Usuario> usuariosConMaxSeguidores = new ArrayList<>();
-    
+
         for (Usuario usuario : usuariosInactivos) {
             int numSeguidores = usuario.getSiguiendo().size();
             if (numSeguidores > maxSeguidores) {
@@ -159,7 +168,7 @@ public class UsuarioService {
                 usuariosConMaxSeguidores.add(usuario);
             }
         }
-    
+
         return usuariosConMaxSeguidores;
     }
 }
