@@ -80,6 +80,7 @@ public class UsuarioService {
 
         return usuariosInactivos;
     }
+
     public List<Usuario> getUsuariosConMasSeguidores() {
         List<Usuario> usuariosConMasSeguidores = new ArrayList<>();
         int maxSeguidores = 0;
@@ -120,6 +121,8 @@ public class UsuarioService {
                     return numSeguidoresInactivos >= numSeguidores / 2.0;
                 })
                 .collect(Collectors.toList());
+            }
+
     public List<Usuario> getUsuariosConSeguidoresInactivos() {
         List<Usuario> usuariosConSeguidoresInactivos = new ArrayList<>();
         LocalDate currentDate = LocalDate.of(2023, 5, 22); // Establecer la fecha actual
@@ -181,7 +184,6 @@ public class UsuarioService {
 
         return usuariosPopulares;
     }
-
 
     public List<Usuario> obtenerUsuarioInactivoMayorSeguidores() throws IOException {
         List<Usuario> usuarios = leerUsuarios(); // Llamada al método leerUsuarios() para obtener la lista de usuarios
